@@ -1,7 +1,7 @@
 # Team Number:7
 ## Melisa Tamer-22058604 / Muharrem Mert Bayram-22058034
 
-# HIMS Data Warehouse 
+# Hospital Information and Management System
 
 A comprehensive relational data warehouse engineered to centralize hospital operations, financial transactions, and pharmacy inventory.
 
