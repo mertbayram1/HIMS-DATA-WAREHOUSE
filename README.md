@@ -112,18 +112,24 @@ GROUP BY CAST(strftime('%Y', invoice_date) AS INTEGER), CAST(strftime('%m', invo
 ## How to Run
 
 1. Clone the repository
-   git clone https://github.com/mertbayram1/HIMS-DATA-WAREHOUSE.git
+git clone https://github.com/mertbayram1/HIMS-DATA-WAREHOUSE.git
+
 
 2. Navigate to the project folder
-   cd HIMS-DATA-WAREHOUSE
+cd HIMS-DATA-WAREHOUSE
+
 
 3. Run the schema file to create all tables, triggers, and views
-   sqlite3 hbys_dwh.sqlite ".read 01_Setup_DDL/00_schema_hospital.sql"
+sqlite3 hbys_dwh.sqlite ".read 01_Setup_DDL/00_schema_hospital.sql"
+
 
 4. (Optional) Load sample data
-   sqlite3 hbys_dwh.sqlite ".read 02_Data_Load_DML/01_master_data.sql"
-   sqlite3 hbys_dwh.sqlite ".read 02_Data_Load_DML/02_dim_patient.sql"
-   sqlite3 hbys_dwh.sqlite ".read 02_Data_Load_DML/03_fact_appointment.sql"
+sqlite3 hbys_dwh.sqlite ".read 02_Data_Load_DML/01_master_data.sql"
+sqlite3 hbys_dwh.sqlite ".read 02_Data_Load_DML/02_dim_patient.sql"
+sqlite3 hbys_dwh.sqlite ".read 02_Data_Load_DML/03_fact_appointment.sql"
+
 
 5. Open the database
-   sqlite3 hbys_dwh.sqlite
+sqlite3 hbys_dwh.sqlite
+
+
