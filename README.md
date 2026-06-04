@@ -1,135 +1,138 @@
 # Team Number:7
 ## Melisa Tamer-22058604 / Muharrem Mert Bayram-22058034
 
-# Hospital Information and Management System
-
-A comprehensive relational data warehouse engineered to centralize hospital operations, financial transactions, and pharmacy inventory.
-
 ---
 
-## Overview
+# HIMS — Hospital Information Management System
 
-The HIMS (Hospital Information and Management System) Data Warehouse is designed to facilitate evidence-based decision-making for healthcare administrators. By normalizing operational data into a unified Star Schema, this project solves immediate reporting bottlenecks and enables advanced SQL analytics.
+Hastane Bilgi Yönetim Sistemi — Star Schema tasarımlı, FastAPI tabanlı, React arayüzlü tam kapsamlı bir HBYS uygulaması.
 
----
+## 🌟 Özellikler
 
-## Problem Statement
+- **Modern Dashboard**: Gerçek zamanlı hasta, randevu ve departman istatistikleri.
+- **Hasta Yönetimi**: Kapsamlı hasta profilleri, tıbbi geçmiş ve kayıt sistemi.
+- **Klinik Kayıtlar**: Randevu planlaması, muayene loglama ve reçete yönetimi.
+- **Fatura & Finans**: Departmana özgü muayene ücretleri, SGK/Özel sigorta indirimleri.
+- **İlaç & Stok**: Kritik stok alarmları, tetikleyici tabanlı otomatik stok takibi.
+- **Raporlama & Analiz**: 7 gelişmiş SQL view ile departman doluluk, hasta demografisi ve gelir raporları.
+- **Premium UI**: Dark-themed glassmorphism tasarım, Framer Motion animasyonları, Recharts grafikleri.
 
-In standard healthcare environments, operational data — ranging from appointments to billing — is frequently siloed, making it difficult for stakeholders to answer critical questions like "Which departments have the highest cancellation rates?" or "What is our 30-day patient revisit ratio?"
+## 📂 Proje Yapısı
 
----
-
-## Proposed Solution
-
-This project architecst a centralized Data Warehouse that resolves data fragmentation by:
-
-- Normalizing hospital entities into distinct Dimension (`dim_`) and Fact (`fact_`) tables.
-- Enforcing strict data integrity via `UNIQUE` constraints (e.g., 1:1 mapping between consultations and invoices).
-- Automating financial calculations using `GENERATED ALWAYS AS` columns.
-- Implementing autonomous pharmacy stock tracking via SQLite `BEFORE/AFTER` Triggers.
-
----
-
-## System Architecture
-
-The database is built on a Star Schema architecture, prioritizing read performance and analytical efficiency.
-
-```
-dim_department ──(1:N)──> dim_doctor
-dim_patient    ──(1:N)──> fact_appointment ──(1:1)──> fact_consultation
-                                                            ├──(1:1)──> fact_invoice
-dim_medication ─────────────────────────────────────────────└──(1:N)──> fact_prescription_detail
-      │
-      └──(1:N)──> ops_stock_alert
-```
-
----
-
-## Technology Stack
-
-- **Database Engine:** SQLite (`PRAGMA foreign_keys = ON`)
-- **Architecture:** Star Schema (Dimensional Modeling)
-- **SQL Features:** CTEs, Window Functions (`LEAD`), Conditional Aggregation (`CASE WHEN`), Triggers, Generated Columns
-
----
-
-## Core Features
-
-- **Patient Revisit Tracking:** Calculates 7-day and 30-day patient return rates using Window Functions.
-- **Department Occupancy Analytics:** Compares appointment completion vs. cancellation ratios across departments.
-- **Financial Dashboards:** Monthly grouping of gross revenue, discounts, and net collections.
-- **Autonomous Stock Alerts:** Automatically flags medication inventory when it drops below critical thresholds.
-
----
-
-## Key Query Implementations
-
-### 1. Patient Revisit Rate Analysis (CTE + Window Function)
-
-```sql
-WITH ordered AS (
-    SELECT patient_key, datetime(appointment_datetime) AS appointment_dt,
-           LEAD(datetime(appointment_datetime)) OVER (
-               PARTITION BY patient_key ORDER BY datetime(appointment_datetime)
-           ) AS next_appointment_dt
-    FROM fact_appointment
-    WHERE appointment_status IN ('COMPLETED', 'SCHEDULED')
-)
-SELECT COUNT(*) AS patient_count,
-       ROUND(100.0 * SUM(CASE WHEN julianday(next_appointment_dt) - julianday(appointment_dt) <= 7
-                         THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 2) AS revisit_7d_rate_pct
-FROM ordered;
+```text
+HIMS_Project/
+├── 📂 api/                    — Backend (FastAPI + Python)
+│   ├── main.py                — Uygulama giriş noktası
+│   ├── db.py                  — SQLite bağlantı yöneticisi
+│   ├── security.py            — JWT token işlemleri
+│   └── routers/               — API endpoint'leri (auth, public, reports)
+├── 📂 frontend/               — Frontend (React + Vite + TailwindCSS)
+│   ├── src/pages/             — 8 sayfa: Dashboard, Hastalar, Randevular...
+│   └── tailwind.config.js     — Tasarım token'ları
+├── 📂 sql/                    — Veritabanı betikleri (4'lü standart yapı)
+│   ├── 01_Setup_DDL/          — Şema ve tablo tanımları
+│   ├── 02_Data_Load_DML/      — Veri yükleme ve güncellemeler
+│   ├── 03_Advanced_SQL/       — View'lar ve Tetikleyiciler
+│   └── 04_Key_Queries/        — Temel analitik sorgular
+├── 📂 data/csv/               — Dışa aktarılan CSV verileri
+├── 📂 tools/                  — Veritabanı yönetim araçları
+│   ├── setup.py               — Veritabanını sıfırla ve yeniden oluştur
+│   ├── export_csvs.py         — Tüm tabloları CSV olarak dışa aktar
+│   └── etl_import.py          — CSV'den veritabanına içe aktar
+├── 📂 docs/                   — Dokümantasyon ve ER diyagramları
+├── docker-compose.yml         — Docker ile tek komut deployment
+└── hospital.db                — SQLite veritabanı
 ```
 
-### 2. Department Occupancy (JOIN + Conditional Aggregation)
+## 🚀 Başlangıç
 
-```sql
-SELECT d.department_name,
-       COUNT(a.appointment_key) AS total_appointments_90d,
-       ROUND(100.0 * SUM(CASE WHEN a.appointment_status = 'COMPLETED' THEN 1 ELSE 0 END)
-             / NULLIF(COUNT(a.appointment_key), 0), 2) AS completion_rate_pct
-FROM dim_department d
-LEFT JOIN fact_appointment a ON a.department_key = d.department_key
-  AND datetime(a.appointment_datetime) >= datetime('now', '-90 day')
-GROUP BY d.department_name;
+### Gereksinimler
+
+- Python 3.10+
+- Node.js 18+ ve npm
+
+### Kurulum
+
+1. **Repoyu klonlayın:**
+   ```bash
+   git clone <repository-url>
+   cd HIMS_Project
+   ```
+
+2. **Backend kurulumu:**
+   ```bash
+   python -m venv .venv_app
+   .venv_app\Scripts\activate        # Windows
+   # source .venv_app/bin/activate   # Linux/macOS
+   pip install -r requirements.txt
+   cp .env.example .env
+   ```
+
+3. **Veritabanını oluşturun ve veri yükleyin:**
+   ```bash
+   python tools/setup.py
+   ```
+
+4. **Frontend kurulumu:**
+   ```bash
+   cd frontend
+   npm install
+   ```
+
+### Uygulamayı Başlatma
+
+**Backend (API):**
+```bash
+python -m uvicorn api.main:app --host 127.0.0.1 --port 8005 --reload
 ```
 
-### 3. Invoice Trend (strftime + Grouped Metrics)
-
-```sql
-SELECT CAST(strftime('%Y', invoice_date) AS INTEGER) AS invoice_year,
-       CAST(strftime('%m', invoice_date) AS INTEGER) AS invoice_month,
-       COUNT(*) AS invoice_count,
-       ROUND(SUM(gross_amount), 2) AS gross_total,
-       ROUND(100.0 * SUM(CASE WHEN payment_status = 'PAID' THEN 1 ELSE 0 END)
-             / NULLIF(COUNT(*), 0), 2) AS paid_ratio_pct
-FROM fact_invoice
-GROUP BY CAST(strftime('%Y', invoice_date) AS INTEGER), CAST(strftime('%m', invoice_date) AS INTEGER);
+**Frontend:**
+```bash
+cd frontend
+npm run dev
 ```
 
----
+Uygulama: `http://localhost:5173` — Giriş: `demo` / `Demo@123456`
 
-## How to Run
+### Docker ile Başlatma
 
-1. Clone the repository
-git clone https://github.com/mertbayram1/HIMS-DATA-WAREHOUSE.git
+```bash
+docker-compose up -d --build
+```
 
+## 🗃️ Veritabanı Yönetim Araçları
 
-2. Navigate to the project folder
-cd HIMS-DATA-WAREHOUSE
+| Komut | Açıklama |
+|---|---|
+| `python tools/setup.py` | Veritabanını sıfırlar, şemayı oluşturur ve 2.000 hasta verisi ile doldurur |
+| `python tools/export_csvs.py` | Tüm tabloları `data/csv/` altına CSV olarak dışa aktarır |
+| `python tools/etl_import.py` | CSV dosyalarından veritabanına veri içe aktarır |
 
+## 🗂️ SQL Mimarisi
 
-3. Run the schema file to create all tables, triggers, and views
-sqlite3 hbys_dwh.sqlite ".read 01_Setup_DDL/00_schema_hospital.sql"
+### Tablolar (Star Schema)
 
+| Tür | Tablo | Açıklama |
+|---|---|---|
+| Dimension | `dim_patient` | Hasta demografisi ve sigorta bilgileri |
+| Dimension | `dim_doctor` | Doktor profilleri ve uzmanlık bilgileri |
+| Dimension | `dim_department` | Departman tanımları |
+| Dimension | `dim_medication` | İlaç envanteri ve stok seviyeleri |
+| Fact | `fact_appointment` | Randevu kayıtları |
+| Fact | `fact_consultation` | Muayene kayıtları |
+| Fact | `fact_invoice` | Fatura ve ödeme kayıtları |
+| Fact | `fact_prescription_detail` | Reçete satırları |
+| Operasyonel | `ops_stock_alert` | Otomatik stok uyarı kayıtları |
 
-4. (Optional) Load sample data
-sqlite3 hbys_dwh.sqlite ".read 02_Data_Load_DML/01_master_data.sql"
-sqlite3 hbys_dwh.sqlite ".read 02_Data_Load_DML/02_dim_patient.sql"
-sqlite3 hbys_dwh.sqlite ".read 02_Data_Load_DML/03_fact_appointment.sql"
+### Gelişmiş SQL Özellikleri
 
+- **7 Raporlama View'ı**: Departman doluluk, fatura özeti, ilaç trendi, hasta demografisi, zaman yoğunluğu, tekrar ziyaret ve kritik stok
+- **5 Tetikleyici**: Reçete yazılınca stok kontrolü ve otomatik düşme; stok yenilenince uyarı otomatik kapatma
+- **Window Functions**: `LEAD()` ile hasta tekrar ziyaret analizi
+- **CTE**: Karmaşık demografik sorguların modüler yazımı
+- **Generated Columns**: `net_amount`, `total_amount` otomatik hesaplanıyor
+- **CHECK Constraints**: Cinsiyet, sigorta tipi, randevu durumu kısıtlamaları
 
-5. Open the database
-sqlite3 hbys_dwh.sqlite
+## 📄 Lisans
 
-
+Bu proje MIT Lisansı kapsamındadır — ayrıntılar için [LICENSE](LICENSE) dosyasına bakın.

@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-gray-100 antialiased selection:bg-medical-teal selection:text-white;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-glass transition-all duration-300;
+  }
+  
+  .glass-card:hover {
+    @apply border-slate-300/90 bg-white/95;
+  }
+
+  .btn-primary {
+    @apply px-6 py-2.5 bg-gradient-to-r from-medical-blue to-medical-teal text-white rounded-xl font-medium 
+           hover:shadow-lg hover:shadow-medical-blue/20 active:scale-95 transition-all duration-200;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-2.5 bg-secondary text-gray-300 rounded-xl font-medium 
+           hover:bg-gray-800 hover:text-gray-100 transition-all duration-200;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 bg-surface border border-gray-800 rounded-xl focus:border-medical-blue 
+           focus:ring-2 focus:ring-medical-blue/20 outline-none transition-all duration-200 text-slate-900;
+  }
+  
+  .stat-card {
+    @apply glass-card p-6 flex flex-col gap-1;
+  }
+}
+
+@layer utilities {
+  /* Override bg-white/5 and border-white/5 with soft slate transparent colors for light mode compatibility */
+  .bg-white\/5 {
+    background-color: rgba(15, 23, 42, 0.04) !important;
+  }
+  .bg-white\/10 {
+    background-color: rgba(15, 23, 42, 0.08) !important;
+  }
+  .bg-white\/20 {
+    background-color: rgba(15, 23, 42, 0.15) !important;
+  }
+  .border-white\/5 {
+    border-color: rgba(15, 23, 42, 0.06) !important;
+  }
+  .border-white\/10 {
+    border-color: rgba(15, 23, 42, 0.1) !important;
+  }
+  .border-white\/20 {
+    border-color: rgba(15, 23, 42, 0.16) !important;
+  }
+}
+
+/* Custom Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}

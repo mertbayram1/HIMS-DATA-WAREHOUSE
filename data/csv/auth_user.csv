@@ -1,0 +1,2 @@
+user_id,username,email,hashed_password,role,patient_key,doctor_key,is_active,created_at
+1,demo,demo@hospital.com,97be7f84936fcd0c45e959555f7d3e3c$c5c8241209638b11ce9463ec7fa745909ba54926bbc85f76d4fbbcd88f1c2840,admin,,,1,2026-05-13 01:48:13

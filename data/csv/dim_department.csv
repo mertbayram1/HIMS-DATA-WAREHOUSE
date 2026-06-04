@@ -1,0 +1,9 @@
+department_key,department_code,department_name,floor_no,is_active,created_at
+1,KARD,Kardiyoloji,2,1,2026-05-13 01:48:12
+2,DAHI,Dahiliye,2,1,2026-05-13 01:48:12
+3,COCUK,Çocuk Kliniği,1,1,2026-05-13 01:48:12
+4,NORO,Nöroloji,4,1,2026-05-13 01:48:12
+5,ORT,Ortopedi,3,1,2026-05-13 01:48:12
+6,KAD,Kadın Hastalıkları,2,1,2026-05-13 01:48:12
+7,DERM,Dermatoloji,3,1,2026-05-13 01:48:12
+8,POLI,Poliklinik,1,1,2026-05-13 01:48:12

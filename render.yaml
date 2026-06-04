@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: hims-api
+    plan: free
+    env: python
+    buildCommand: pip install -r requirements.txt && python tools/setup.py
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port 10000
+    envVars:
+      - key: HIMS_DB
+        value: ./hospital.db
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHONPATH
+        value: .  # <--- BU SATIR ÇOK ÖNEMLİ
+
+  - type: web
+    name: hims-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: VITE_API_BASE
+        value: https://hims-api.onrender.com
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+
+
+
