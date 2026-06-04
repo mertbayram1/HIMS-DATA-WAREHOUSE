@@ -8,16 +8,16 @@ SELECT
     d.department_code,
     d.department_name,
     COUNT(a.appointment_key) AS total_appointments_90d,
-    SUM(CASE WHEN a.appointment_status = 'COMPLETED' THEN 1 ELSE 0 END) AS completed_appointments_90d,
-    SUM(CASE WHEN a.appointment_status = 'CANCELLED' THEN 1 ELSE 0 END) AS cancelled_appointments_90d,
-    SUM(CASE WHEN a.appointment_status = 'NO_SHOW' THEN 1 ELSE 0 END) AS no_show_appointments_90d,
+    SUM(CASE WHEN a.appointment_status = 'TAMAMLANDI' THEN 1 ELSE 0 END) AS completed_appointments_90d,
+    SUM(CASE WHEN a.appointment_status = 'İPTAL'      THEN 1 ELSE 0 END) AS cancelled_appointments_90d,
+    SUM(CASE WHEN a.appointment_status = 'GELMEDİ'   THEN 1 ELSE 0 END) AS no_show_appointments_90d,
     ROUND(
-        100.0 * SUM(CASE WHEN a.appointment_status = 'COMPLETED' THEN 1 ELSE 0 END)
+        100.0 * SUM(CASE WHEN a.appointment_status = 'TAMAMLANDI' THEN 1 ELSE 0 END)
         / NULLIF(COUNT(a.appointment_key), 0),
         2
     ) AS completion_rate_pct,
     ROUND(
-        100.0 * SUM(CASE WHEN a.appointment_status IN ('CANCELLED', 'NO_SHOW') THEN 1 ELSE 0 END)
+        100.0 * SUM(CASE WHEN a.appointment_status IN ('İPTAL', 'GELMEDİ') THEN 1 ELSE 0 END)
         / NULLIF(COUNT(a.appointment_key), 0),
         2
     ) AS loss_rate_pct
@@ -125,10 +125,10 @@ SELECT
     d.department_code,
     d.department_name,
     COUNT(*) AS total_appointments,
-    SUM(CASE WHEN a.appointment_status = 'COMPLETED' THEN 1 ELSE 0 END) AS completed_appointments,
-    SUM(CASE WHEN a.appointment_status = 'CANCELLED' THEN 1 ELSE 0 END) AS cancelled_appointments,
-    SUM(CASE WHEN a.appointment_status = 'NO_SHOW' THEN 1 ELSE 0 END) AS no_show_appointments,
-    ROUND(100.0 * SUM(CASE WHEN a.appointment_status = 'COMPLETED' THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 2) AS completion_rate_pct
+    SUM(CASE WHEN a.appointment_status = 'TAMAMLANDI' THEN 1 ELSE 0 END) AS completed_appointments,
+    SUM(CASE WHEN a.appointment_status = 'İPTAL'      THEN 1 ELSE 0 END) AS cancelled_appointments,
+    SUM(CASE WHEN a.appointment_status = 'GELMEDİ'   THEN 1 ELSE 0 END) AS no_show_appointments,
+    ROUND(100.0 * SUM(CASE WHEN a.appointment_status = 'TAMAMLANDI' THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 2) AS completion_rate_pct
 FROM fact_appointment AS a
 INNER JOIN dim_department AS d
     ON d.department_key = a.department_key
@@ -152,7 +152,7 @@ WITH ordered AS (
             ORDER BY datetime(appointment_datetime)
         ) AS next_appointment_dt
     FROM fact_appointment
-    WHERE appointment_status IN ('COMPLETED', 'SCHEDULED')
+    WHERE appointment_status IN ('TAMAMLANDI', 'PLANLI')
 ),
 patient_flags AS (
     SELECT
