@@ -4,12 +4,24 @@ echo ========================================================
 echo HIMS - Hospital Information Management System Local Starter
 echo ========================================================
 
-rem Check if virtual environment exists
+rem Check if virtual environment exists, if not create and install dependencies
 if not exist .venv_app (
-    echo [PYTHON] .venv_app klasoru bulunamadi.
-    echo Lutfen once python -m venv .venv_app calistirin.
-    pause
-    exit /b
+    echo [PYTHON] .venv_app klasoru bulunamadi. Sanal ortam (.venv_app) olusturuluyor...
+    python -m venv .venv_app
+    if errorlevel 1 (
+        echo [HATA] Python sanal ortami olusturulamadi! Lutfen Python'in yuklu ve PATH'e ekli oldugundan emin olun.
+        pause
+        exit /b
+    )
+    echo [PYTHON] Sanal ortam basariyla olusturuldu. Bagimliliklar yukleniyor...
+    call .venv_app\Scripts\activate.bat
+    pip install -r requirements.txt
+)
+
+rem Check if .env file exists, if not copy from example
+if not exist .env (
+    echo [CONFIG] .env dosyasi olusturuluyor (.env.example kullanilarak)...
+    copy .env.example .env
 )
 
 rem Check if hospital.db exists, if not seed it
