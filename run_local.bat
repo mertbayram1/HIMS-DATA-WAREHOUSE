@@ -6,7 +6,7 @@ echo ========================================================
 
 rem Check if virtual environment exists, if not create and install dependencies
 if not exist .venv_app (
-    echo [PYTHON] .venv_app klasoru bulunamadi. Sanal ortam (.venv_app) olusturuluyor...
+    echo [PYTHON] .venv_app klasoru bulunamadi. Sanal ortam olusturuluyor...
     python -m venv .venv_app
     if errorlevel 1 (
         echo [HATA] Python sanal ortami olusturulamadi! Lutfen Python'in yuklu ve PATH'e ekli oldugundan emin olun.
@@ -20,7 +20,7 @@ if not exist .venv_app (
 
 rem Check if .env file exists, if not copy from example
 if not exist .env (
-    echo [CONFIG] .env dosyasi olusturuluyor (.env.example kullanilarak)...
+    echo [CONFIG] .env dosyasi olusturuluyor - env.example kullaniliyor...
     copy .env.example .env
 )
 
