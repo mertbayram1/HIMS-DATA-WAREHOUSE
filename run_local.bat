@@ -1,4 +1,5 @@
 @echo off
+cd /d "%~dp0"
 title HIMS - Hospital Information Management System
 echo ========================================================
 echo HIMS - Hospital Information Management System Local Starter
@@ -46,11 +47,11 @@ if not exist frontend\node_modules (
 
 rem Start Backend in a new window
 echo [BACKEND] API sunucusu baslatiliyor on Port 8005...
-start "HIMS Backend" cmd /k "call .venv_app\Scripts\activate.bat && python -m uvicorn api.main:app --host 127.0.0.1 --port 8005 --reload"
+start "HIMS Backend" /d "%~dp0" cmd /k "call .venv_app\Scripts\activate.bat && python -m uvicorn api.main:app --host 127.0.0.1 --port 8005 --reload"
 
 rem Start Frontend in a new window
 echo [FRONTEND] React Vite sunucusu baslatiliyor on Port 5173...
-start "HIMS Frontend" cmd /k "cd frontend && npm run dev"
+start "HIMS Frontend" /d "%~dp0" cmd /k "cd frontend && npm run dev"
 
 echo ========================================================
 echo [OK] HIMS Uygulamasi baslatildi!
