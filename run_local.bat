@@ -43,7 +43,7 @@ if not exist frontend\node_modules (
     cd ..
 ) else (
     echo [FRONTEND] node_modules bulundu.
-)
+) 
 
 rem Start Backend in a new window
 echo [BACKEND] API sunucusu baslatiliyor on Port 8005...
