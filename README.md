@@ -1,6 +1,8 @@
 # Team Number:7
 ## Melisa Tamer-22058604 / Muharrem Mert Bayram-22058034
 
+PRESENTATION VIDEO LINK : https://stdyildizedu-my.sharepoint.com/:v:/g/personal/muharrem_bayram_std_yildiz_edu_tr/IQCCbRyTHcroTJwAn6Z4a6C1ATRZHVCzYsTFiRZPwVrwS-k?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=6oQdwT
+
 # Hospital Information and Management System
 
 A comprehensive relational data warehouse engineered to centralize hospital operations, financial transactions, and pharmacy inventory.
